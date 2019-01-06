@@ -1,17 +1,26 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <b-container id="app">
+    <b-row>
+      <b-col>
+        <MenuBar />
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col>
+        <PlayersList />
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import MenuBar from './components/MenuBar';
+import PlayersList from './components/PlayersList'
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    MenuBar,
+    PlayersList,
   }
 }
 </script>
