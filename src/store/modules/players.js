@@ -10,39 +10,58 @@ function bigRandom() {
   return accum;
 }
 
-function indexOfPlayer(state, playerId) {
-  return state.players.map(p => p.id).indexOf(playerId);
-}
 
 export default {
   state: {
     list: [],
     activePlayerId: '',
   },
-  mutations: {
-    removePlayer(state, playerId) {
-      state.list.splice(indexOfPlayer(playerId), 1);
-    },
-    updatePlayer(state, { playerId, name }) {
-      state.list.splice(indexOfPlayer(playerId, 1, { id: playerId, name }));
-    }
-  },
   actions: {
     addPlayer({ state, rootState, commit }) {
-      const { newPlayerName } = rootState.forms.players;
-      if (!state.list.map(p => p.name).includes(newPlayerName)) {
+      const { newName } = rootState.forms.players;
+      if (newName && !state.list.map(p => p.name).includes(newName)) {
         commit('setState', { 
           key: 'list', 
           data: [...state.list, {
-            name: newPlayerName,
+            name: newName,
             id: bigRandom(),
           }],
         });
-        commit('forms/players/clearFields', ['newPlayerName'], { root: true });
+        commit(
+          'forms/players/clearFields', 
+          ['newName'], 
+          { root: true }
+        );
       }
     },
+    updatePlayer({ state, rootState, getters, commit }) {
+      const { editName, editId } = rootState.forms.players;
+      const newList = state.list.slice();  
+      newList.splice(getters.indexOfPlayer(editId), 1, {
+        name: editName,
+        id: editId,
+      });      
+      commit('setState', {
+        key: 'list',
+        data: newList,
+      });
+      commit(
+        'forms/players/clearFields', 
+        ['editName', 'editId'], 
+        { root: true }
+      );
+    },
+    removePlayer({ state, commit, getters }, playerId) { 
+      const newList = state.list.slice();
+      newList.splice(getters.indexOfPlayer(playerId), 1)
+      commit('setState', {
+        key: 'list',
+        data: newList,
+      });
+    }
   },
   getters: {
     activePlayer: state => state.list.find(p => p.id === state.activePlayerId),
+    indexOfPlayer: state => playerId => state.list.map(p => p.id).indexOf(playerId),
   }
 }

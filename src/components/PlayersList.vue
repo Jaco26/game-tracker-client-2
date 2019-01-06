@@ -1,26 +1,33 @@
 <template>
   <div>
-    <b-form-group>
-      <b-form-input placeholder="Add a new player" v-model.trim="newPlayerName"></b-form-input>
-      <b-button @click="addPlayer({ name: newPlayerName })">Add Player</b-button>
-    </b-form-group>
-    
-    <b-list-group>
+    <b-input-group class="col-6" >
+      <b-form-input placeholder="Add a new player" v-model.trim="newName"></b-form-input>
+      <b-input-group-append>
+        <b-btn cols="4" @click="addPlayer({ name: newName })">Add Player</b-btn>
+      </b-input-group-append>
+    </b-input-group>
+
+    <b-list-group class="col-6">
       <b-list-group-item 
         v-for="player in list" 
         :key="player.id"
       >
         <div class="d-flex w-100 justify-content-between">
-          <b-form-input v-if="editId === player.id" v-model="newPlayerName"></b-form-input>
+          <b-form-input 
+            v-if="editId === player.id" 
+            v-model="editName"
+            class="col-8"
+          />
           <p v-else>{{player.name}}</p>
           <div>
             <div v-if="editId === player.id">
-              <b-button @click="updatePlayer"></b-button>
+              <b-btn @click="updatePlayer">Save</b-btn>
               <b-button @click="cancelEdit" variant="sm">Cancel</b-button>
             </div>
-            
-            <b-button v-else @click="editId = player.id">Edit</b-button>
-            <b-button variant="sm">Delete</b-button>
+            <div v-else>
+              <b-button @click="startEdit(player)">Edit</b-button>
+              <b-button variant="sm" @click="removePlayer(player.id)">Delete</b-button>
+            </div>
           </div>
         </div>
       </b-list-group-item>
@@ -38,21 +45,23 @@ export default {
       'list',
     ]),
     ...bindState('forms/players', [
-      'newPlayerName',
+      'newName',
       'editId',
+      'editName',
     ]),
   },
   methods: {
-    ...mapMutations('game/players', [
+    ...mapActions('game/players', [
       'addPlayer',
       'updatePlayer',
       'removePlayer',
     ]),
-    ...mapActions('game/players', [
-      'addPlayer'
-    ]),
+    startEdit(player) {
+      this.editName = player.name;
+      this.editId = player.id;
+    },
     cancelEdit() {
-      this.newPlayerName = '';
+      this.editName = '';
       this.editId = '';
     }
   }

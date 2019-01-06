@@ -1,7 +1,8 @@
 const players = {
   state: {
-    newPlayerName: '',
+    newName: '',
     editId: '',
+    editName: '',
   },
 }
 
@@ -9,5 +10,4 @@ export default {
   modules: {
     players,
   },
-
 };
