@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 // modules
-import game from './modules/game';
+import game from './modules/game/index';
 import forms from './modules/forms';
 
 Vue.use(Vuex);

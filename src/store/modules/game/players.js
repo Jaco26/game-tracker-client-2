@@ -84,3 +84,4 @@ export default {
     indexOfPlayer: state => playerId => state.list.map(p => p.id).indexOf(playerId),
   }
 }
+
