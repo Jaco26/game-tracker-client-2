@@ -74,9 +74,19 @@ function clearFields(state, keys = []) {
   });
 }
 
+function saveToStorage(state, { STORAGE_KEY, keys }) {
+  const toSave = Object.keys(state).reduce((a, b) => {
+    if (keys.includes(b)) {
+      a[b] = state[b];
+    } 
+    return a;
+  }, {});
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+}
+
 // a wrapper around Object.assign used to ensure that all 
 // modules' mutation objects has a setState mutation
 function mergeToPreserve(target, source) {
-  source.mutations = { ...source.mutations, setState, clearFields };
+  source.mutations = { ...source.mutations, setState, clearFields, saveToStorage };
   return Object.assign(target, source);
 }

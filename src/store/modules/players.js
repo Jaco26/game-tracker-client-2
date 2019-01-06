@@ -10,12 +10,26 @@ function bigRandom() {
   return accum;
 }
 
+const STORAGE_KEY = 'players';
 
-export default {
-  state: {
+function loadStorage(state) {
+  const storage = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  if (storage) {
+    state.list = storage.list;
+  }
+  return state;
+}
+
+function initialState() {
+  return {
     list: [],
     activePlayerId: '',
-  },
+  }
+}
+
+
+export default {
+  state: loadStorage(initialState()),
   actions: {
     addPlayer({ state, rootState, commit }) {
       const { newName } = rootState.forms.players;
@@ -32,6 +46,7 @@ export default {
           ['newName'], 
           { root: true }
         );
+        commit('saveToStorage', { STORAGE_KEY, keys: ['list'] });
       }
     },
     updatePlayer({ state, rootState, getters, commit }) {
@@ -50,6 +65,7 @@ export default {
         ['editName', 'editId'], 
         { root: true }
       );
+      commit('saveToStorage', { STORAGE_KEY, keys: ['list'] });
     },
     removePlayer({ state, commit, getters }, playerId) { 
       const newList = state.list.slice();
@@ -58,6 +74,7 @@ export default {
         key: 'list',
         data: newList,
       });
+      commit('saveToStorage', { STORAGE_KEY, keys: ['list'] });
     }
   },
   getters: {
