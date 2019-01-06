@@ -1,7 +1,11 @@
 <template>
   <div>
     <b-input-group class="col-6" >
-      <b-form-input placeholder="Add a new player" v-model.trim="newName"></b-form-input>
+      <b-form-input
+        placeholder="Add a new player" 
+        v-model.trim="newName"
+        @keyup.enter.native="addPlayer({ name: newName })"
+      />
       <b-input-group-append>
         <b-btn cols="4" @click="addPlayer({ name: newName })">Add Player</b-btn>
       </b-input-group-append>
@@ -27,7 +31,7 @@
             </div>
             <div v-else>
               <b-btn size="sm" variant="outline-info" @click="startEdit(player)">Edit</b-btn>
-              <b-btn size="sm" variant="outline-danger" @click="removePlayer(player.id)">Delete</b-btn>
+              <b-btn size="sm" variant="outline-danger" @click="confirmDelete(player)">Delete</b-btn>
             </div>
           </div>
         </div>
@@ -70,6 +74,11 @@ export default {
     cancelEdit() {
       this.editName = '';
       this.editId = '';
+    },
+    confirmDelete(player) {
+      if (confirm('Are you sure you want to delete ' + player.name + '?')) {
+        this.removePlayer(player.id);
+      }
     }
   }
 }
