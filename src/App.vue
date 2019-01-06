@@ -10,18 +10,25 @@
         <PlayersList allowEdit />
       </b-col>
     </b-row>
+    <b-row>
+      <b-col>
+        <CityGraph />
+      </b-col>
+    </b-row>
   </b-container>
 </template>
 
 <script>
 import MenuBar from './components/MenuBar';
-import PlayersList from './components/PlayersList'
+import PlayersList from './components/PlayersList';
+import CityGraph from './components/CityGraph';
 export default {
   name: 'app',
   components: {
     MenuBar,
     PlayersList,
-  }
+    CityGraph,
+  },
 }
 </script>
 
