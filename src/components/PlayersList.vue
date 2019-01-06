@@ -16,17 +16,18 @@
           <b-form-input 
             v-if="editId === player.id" 
             v-model="editName"
-            class="col-8"
+            class="col-6"
+            @keyup.enter.native="updatePlayer"
           />
-          <p v-else>{{player.name}}</p>
-          <div>
+          <div v-else>{{player.name}}</div>
+          <div v-if="allowEdit">
             <div v-if="editId === player.id">
-              <b-btn @click="updatePlayer">Save</b-btn>
-              <b-button @click="cancelEdit" variant="sm">Cancel</b-button>
+              <b-btn size="sm" variant="primary" @click="updatePlayer">Save</b-btn>
+              <b-btn size="sm" variant="warning" @click="cancelEdit" >Cancel</b-btn>
             </div>
             <div v-else>
-              <b-button @click="startEdit(player)">Edit</b-button>
-              <b-button variant="sm" @click="removePlayer(player.id)">Delete</b-button>
+              <b-btn size="sm" variant="outline-info" @click="startEdit(player)">Edit</b-btn>
+              <b-btn size="sm" variant="outline-danger" @click="removePlayer(player.id)">Delete</b-btn>
             </div>
           </div>
         </div>
@@ -40,6 +41,12 @@
 import { mapState, mapMutations, mapActions } from 'vuex';
 import { bindState } from '@/store/index'; // try to only use for form data
 export default {
+  props: {
+    allowEdit: {
+      type: Boolean,
+      default: false,
+    },
+  },
   computed: {
     ...mapState('game/players', [
       'list',

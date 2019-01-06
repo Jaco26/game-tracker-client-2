@@ -20,13 +20,13 @@ function loadStorage(state) {
   return state;
 }
 
+
 function initialState() {
   return {
     list: [],
     activePlayerId: '',
   }
 }
-
 
 export default {
   state: loadStorage(initialState()),
@@ -51,15 +51,17 @@ export default {
     },
     updatePlayer({ state, rootState, getters, commit }) {
       const { editName, editId } = rootState.forms.players;
-      const newList = state.list.slice();  
-      newList.splice(getters.indexOfPlayer(editId), 1, {
-        name: editName,
-        id: editId,
-      });      
-      commit('setState', {
-        key: 'list',
-        data: newList,
-      });
+      if (editName) {
+        const newList = state.list.slice();  
+        newList.splice(getters.indexOfPlayer(editId), 1, {
+          name: editName,
+          id: editId,
+        });     
+        commit('setState', {
+          key: 'list',
+          data: newList,
+        });
+      }
       commit(
         'forms/players/clearFields', 
         ['editName', 'editId'], 

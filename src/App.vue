@@ -3,12 +3,11 @@
     <b-row>
       <b-col>
         <MenuBar />
-        <b-btn @click="$store.commit('game/players/saveToStorage', { STORAGE_KEY: 'players', keys: ['list'] })">save players</b-btn>
       </b-col>
     </b-row>
     <b-row>
       <b-col>
-        <PlayersList />
+        <PlayersList allowEdit />
       </b-col>
     </b-row>
   </b-container>
