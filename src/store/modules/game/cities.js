@@ -13,10 +13,6 @@ function initialState() {
   return {
     graph: CITY_GRAPH,
     infectionLevels: initEmptyInfectionLevels(),
-
-    // store ids of cities that had outbreaks during actions.updateCityInfection
-    // so as to be able to avoid infinite loop of infection
-    outbreakCities: {},
   };
 }
 
@@ -43,6 +39,7 @@ export default {
           key: 'infectionLevels', 
           data: newInfectionLevels 
         });
+        commit('saveToStorage', { STORAGE_KEY, keys: ['infectionLevels'] });
       } else if (amount < 4 && amount > -1) {
         commit('setInfectionLevel', { id, amount });
         commit('saveToStorage', { STORAGE_KEY, keys: ['infectionLevels'] });
