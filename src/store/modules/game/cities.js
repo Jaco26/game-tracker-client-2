@@ -13,7 +13,11 @@ function initialState() {
   return {
     graph: CITY_GRAPH,
     infectionLevels: initEmptyInfectionLevels(),
-  }
+
+    // store ids of cities that had outbreaks during actions.updateCityInfection
+    // so as to be able to avoid infinite loop of infection
+    outbreakCities: {},
+  };
 }
 
 function loadFromStorage(state) {
@@ -32,26 +36,25 @@ export default {
     },
   },
   actions: {
-    updateCityInfection({ commit, state, dispatch }, { id, amount }) {   
-      console.log(id);
-      
+    updateCityInfection({ commit, state }, { id, amount }) {
       if (amount === 4) {
-        console.log('OUTBREAK!!!')
-        const firstConnections = state.graph.find(city => city.id == id).connections[0];
-        Object.keys(firstConnections).forEach(key => {
-          const newAmount = state.infectionLevels[key] + 1;
-          if (false) {
-            // TODO: Keep track of outbreak origin cities so that I don't create an
-            // infinite self-referential loop of outbreaking!!
-            dispatch('updateCityInfection', { id: key, amount: newAmount });
-          }
+        const newInfectionLevels = handleOutbreak(id, state.infectionLevels, state.graph);
+        commit('setState', { 
+          key: 'infectionLevels', 
+          data: newInfectionLevels 
         });
-      }   
-      if (amount < 4 && amount > -1) {
+      } else if (amount < 4 && amount > -1) {
         commit('setInfectionLevel', { id, amount });
         commit('saveToStorage', { STORAGE_KEY, keys: ['infectionLevels'] });
       }
     },
+    clearInfections({ commit }) {
+      commit('setState', {
+        key: 'infectionLevels',
+        data: initEmptyInfectionLevels(),
+      });
+      commit('saveToStorage', { STORAGE_KEY, keys: ['infectionLevels'] });
+    }
   },
   getters: {
     simpleCities: state => state.graph.map(c => ({
@@ -59,4 +62,27 @@ export default {
       id: c.id,
     })),
   }
+}
+
+
+function handleOutbreak(outbreakCityId, infectionLevels, graph) {
+  infectionLevels = JSON.parse(JSON.stringify(infectionLevels));
+  const outbreakCities = {}; // keep track of which cities have already caused an outbreak as outbreak radiates outward...no inifinete loop
+  (function innerHelper(cityId, amount) {
+    if (amount > 3) { // OUTBREAK!
+      outbreakCities[cityId] = true; // this city has had an outbreak
+      let newAmount;
+      const firstConnections = graph.find(city => city.id == cityId).connections[0]; // use == for value, not type, equality in find (cityId is String sometimes)
+      Object.keys(firstConnections).forEach(key => {
+        if (!outbreakCities[key]) { // if given city connection has not been an earlier cause of outbreak...
+          newAmount = infectionLevels[key] + 1;
+          return innerHelper(key, newAmount);
+        }
+      });
+    } else { // Otherwise...
+      return infectionLevels[cityId] = amount;
+    }
+  })(outbreakCityId, 4); // handleOutbreak is only called when the "amount" is 4 so instead of passing 4 from the outside, 
+                         // we just start the call with 4 as an initial arguement for "amount"
+  return infectionLevels;
 }
