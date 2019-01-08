@@ -12,7 +12,7 @@
     </b-row>
     <b-row>
       <b-col>
-        <CityGraph />
+        <CityGraphCanvas />
       </b-col>
     </b-row>
   </b-container>
@@ -22,12 +22,14 @@
 import MenuBar from './components/MenuBar';
 import PlayersList from './components/PlayersList';
 import CityGraph from './components/CityGraph';
+import CityGraphCanvas from './components/CityGraphCanvas';
 export default {
   name: 'app',
   components: {
     MenuBar,
     PlayersList,
     CityGraph,
+    CityGraphCanvas,
   },
 }
 </script>
