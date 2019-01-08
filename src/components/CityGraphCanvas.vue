@@ -37,7 +37,7 @@ export default {
         const { xRatKey, yRatKey, xRat, yRat, color, connections, id, name } = city;
         const x = (xRat / xRatKey) * this.width;
         const y = (yRat / yRatKey) * this.height;
-        const radius = 20;
+        const radius = 15;
         accum.push({ x, y, radius, color, connections, id, name });
         return accum;
       }, []);

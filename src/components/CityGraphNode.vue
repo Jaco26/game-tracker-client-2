@@ -32,22 +32,31 @@ export default {
       required: true,
     },
   },
+  methods: {
+    drawNode() {
+      const ctx = this.provider.ctx;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+      ctx.fillStyle = this.color;
+      ctx.fill();
+      ctx.strokeStyle = 'black'
+      ctx.stroke();
+      ctx.closePath();
+    },
+    drawInfectionLevel() {
+      const ctx = this.provider.ctx;
+      ctx.beginPath();
+      ctx.font = '25px Arial';
+      ctx.fillStyle = this.color === 'yellow' ? 'black' : 'white';
+      ctx.fillText(this.infectionLevel, this.x - 7, this.y + 8);
+      ctx.closePath();
+    }
+  },
   render() {
     if (!this.provider.ctx) return;
-    const ctx = this.provider.ctx;
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
-    ctx.fillStyle = this.color;
-    ctx.fill();
-    ctx.strokeStyle = 'black'
-    ctx.stroke();
-    ctx.closePath();
-
-    ctx.beginPath();
-    ctx.font = '30px Arial';
-    ctx.fillStyle = this.color === 'yellow' ? 'black' : 'white';
-    ctx.fillText(this.infectionLevel, this.x - 8, this.y + 10);
-    ctx.closePath();
+    this.drawNode();
+    this.drawInfectionLevel();
+  
   }
 }
 </script>
