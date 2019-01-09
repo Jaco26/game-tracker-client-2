@@ -71,9 +71,7 @@ function handleOutbreak(outbreakCityId, infectionLevels, graph, initialAmount = 
       let newAmount;
       const firstConnections = graph.find(city => city.id == cityId).connections[0]; // use == for value, not type, equality in find (cityId is String sometimes)
       Object.keys(firstConnections).forEach(key => {
-        if (!outbreakCities[key]) { // if given city connection has not been an earlier cause of outbreak...
-          console.log(key);
-          
+        if (!outbreakCities[key]) { // if given city connection has not been an earlier cause of outbreak...          
           newAmount = infectionLevels[key] + 1;
           return innerHelper(key, newAmount);
         }

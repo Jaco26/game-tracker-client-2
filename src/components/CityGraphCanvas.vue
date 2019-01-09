@@ -61,6 +61,12 @@ export default {
         }
       });
     },
+    checkForPacificCrossing(node0, node1) {
+      const t = { [node0.name]: true, [node1.name]: true };
+      return (t['Los Angeles'] && t['Sydney']) ||
+        (t['San Francisco'] && t['Manila']) ||
+        (t['San Francisco'] && t['Tokyo']);
+    },
     assembleEdges() {
       const drawnConnections = [];
       const connectionLines = [];
@@ -71,9 +77,14 @@ export default {
         name0 = node.name;
         Object.keys(node.connections[0]).forEach(edge => {
           end = this.canvasGraphNodes.find(n => n.id == edge);
-          x1 = Math.round(end.x);
-          y1 = Math.round(end.y);
-          name1 = end.name;
+          if (this.checkForPacificCrossing(node, end)) {
+            console.log(node.name, end.name);
+            
+          } else {
+            x1 = Math.round(end.x);
+            y1 = Math.round(end.y);
+            name1 = end.name;
+          }
           if (!drawnConnections.find(c => c.n1 === node.id && c.n2 === edge)) {
             // TODO: handle connections spanning the pacific.
             connectionLines.push({ x0, y0, x1, y1, name0, name1 });
