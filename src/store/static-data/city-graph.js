@@ -1871,7 +1871,8 @@ export default [
         "6": "Beijing",
         "14": "Hong Kong",
         "41": "Seoul",
-        "47": "Tokyo"
+        "47": "Tokyo",
+        "45": "Taipei"
       },
       {
         "2": "Bangkok",
