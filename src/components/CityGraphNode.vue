@@ -27,10 +27,7 @@ export default {
       type: Number,
       required: true,
     },
-    connectedCityIds: {
-      type: Array,
-      required: true,
-    },
+ 
   },
   methods: {
     drawNode() {
@@ -50,13 +47,12 @@ export default {
       ctx.fillStyle = this.color === 'yellow' ? 'black' : 'white';
       ctx.fillText(this.infectionLevel, this.x - 7, this.y + 8);
       ctx.closePath();
-    }
+    },
   },
   render() {
     if (!this.provider.ctx) return;
     this.drawNode();
     this.drawInfectionLevel();
-  
   }
 }
 </script>

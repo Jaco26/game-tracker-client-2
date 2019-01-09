@@ -14,14 +14,13 @@
       :infectionLevel="infectionLevels[node.id]"
       :id="node.id"
       :name="node.name"
-      :connectedCityIds="Object.keys(node.connections[0])"
     />
   </div>
 </template>
 
 <script>
 import CityGraphNode from './CityGraphNode';
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapGetters } from 'vuex';
 export default {
   components: {
     CityGraphNode,
@@ -38,10 +37,10 @@ export default {
         const x = (xRat / xRatKey) * this.width;
         const y = (yRat / yRatKey) * this.height;
         const radius = 15;
-        accum.push({ x, y, radius, color, connections, id, name });
+        accum.push({ x, y, radius, color, id, connections, name });
         return accum;
       }, []);
-    }
+    },
   },
   methods: {
     ...mapActions('game/cities', [
@@ -62,6 +61,39 @@ export default {
         }
       });
     },
+    assembleEdges() {
+      const drawnConnections = [];
+      const connectionLines = [];
+      let x0, x1, y0, y1, name0, name1, end;
+      this.canvasGraphNodes.forEach(node => {
+        x0 = Math.round(node.x);
+        y0 = Math.round(node.y);
+        name0 = node.name;
+        Object.keys(node.connections[0]).forEach(edge => {
+          end = this.canvasGraphNodes.find(n => n.id == edge);
+          x1 = Math.round(end.x);
+          y1 = Math.round(end.y);
+          name1 = end.name;
+          if (!drawnConnections.find(c => c.n1 === node.id && c.n2 === edge)) {
+            // TODO: handle connections spanning the pacific.
+            connectionLines.push({ x0, y0, x1, y1, name0, name1 });
+            drawnConnections.push({ n1: node.id, n2: edge });
+          }
+        });
+      });
+      return connectionLines;
+    },
+    drawEdges() {
+      const edges = this.assembleEdges();
+      const ctx = this.provider.ctx;
+      edges.forEach(edge => {
+        ctx.beginPath();
+        ctx.moveTo(edge.x0, edge.y0);
+        ctx.lineTo(edge.x1, edge.y1);
+        ctx.stroke();
+        ctx.closePath();
+      });
+    }
   },
   data() {
     return {
@@ -88,6 +120,8 @@ export default {
 
     this.$refs['city-graph-canvas'].width = this.width;
     this.$refs['city-graph-canvas'].height = this.height;
+
+    this.drawEdges();
   }
 }
 </script>

@@ -62,7 +62,7 @@ export default {
 }
 
 
-function handleOutbreak(outbreakCityId, infectionLevels, graph) {
+function handleOutbreak(outbreakCityId, infectionLevels, graph, initialAmount = 4) {
   infectionLevels = JSON.parse(JSON.stringify(infectionLevels));
   const outbreakCities = {}; // keep track of which cities have already caused an outbreak as outbreak radiates outward...no inifinete loop
   (function innerHelper(cityId, amount) {
@@ -79,7 +79,7 @@ function handleOutbreak(outbreakCityId, infectionLevels, graph) {
     } else { // Otherwise...
       return infectionLevels[cityId] = amount;
     }
-  })(outbreakCityId, 4); // handleOutbreak is only called when the "amount" is 4 so instead of passing 4 from the outside, 
+  })(outbreakCityId, initialAmount); // handleOutbreak is only called when the "amount" is 4 so instead of passing 4 from the outside, 
                          // we just start the call with 4 as an initial arguement for "amount"
   return infectionLevels;
 }
