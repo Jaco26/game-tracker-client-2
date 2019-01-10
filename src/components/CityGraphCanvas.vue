@@ -67,6 +67,30 @@ export default {
         (t['San Francisco'] && t['Manila']) ||
         (t['San Francisco'] && t['Tokyo']);
     },
+    handlePacificCrossing(n0, n1) {
+      const W = this.provider.ctx.canvas.width;
+      const H = this.provider.ctx.canvas.height;
+      let node0, node1;
+      [n0, n1].forEach(n => {
+        n.name.startsWith('San') || n.name.startsWith('Los')
+          ? node0 = n
+          : node1 = n;
+      });
+
+      const lineToWest = { 
+        x0: node0.x,
+        y0: node0.y,
+        x1: 0,
+        y1: (node0.y - (node1.y - node0.y) / ((W - node1.x) - (node0.x))),
+      };
+      const lineToEast = {
+        x0: node1.x,
+        y0: node1.y,
+        x1: this.provider.ctx.canvas.width,
+        y1: node1.y - (node0.y - node1.y) / ((W - node0.x) - (node1.x)),
+      }
+      return [lineToEast, lineToWest];
+    },
     assembleEdges() {
       const drawnConnections = [];
       const connectionLines = [];
@@ -78,8 +102,9 @@ export default {
         Object.keys(node.connections[0]).forEach(edge => {
           end = this.canvasGraphNodes.find(n => n.id == edge);
           if (this.checkForPacificCrossing(node, end)) {
-            console.log(node.name, end.name);
             
+            const [ line1, line2 ] = this.handlePacificCrossing(node, end);
+            connectionLines.push(line1, line2);
           } else {
             x1 = Math.round(end.x);
             y1 = Math.round(end.y);

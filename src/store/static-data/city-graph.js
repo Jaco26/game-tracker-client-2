@@ -1094,7 +1094,8 @@ export default [
       {
         "10": "Chicago",
         "28": "Mexico City",
-        "44": "Sydney"
+        "44": "Sydney",
+        "38": "San Francisco"
       },
       {
         "3": "Atlanta",
