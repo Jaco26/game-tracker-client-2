@@ -81,8 +81,8 @@ export default {
         x0: node0.x,
         y0: node0.y,
         x1: 0,
-        y1: (node0.y - (node1.y - node0.y) / ((W - node1.x) - (node0.x))),
-      };
+        y1: node0.y + (node1.y - node0.y) / ((W - node1.x) - (node0.x)),
+      };      
       const lineToEast = {
         x0: node1.x,
         y0: node1.y,

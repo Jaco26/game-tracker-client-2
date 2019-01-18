@@ -9,7 +9,7 @@
 import { bindState } from '@/store/index';
 export default {
   computed: { 
-    
+    // ...bindState('')
   },
 
 }
