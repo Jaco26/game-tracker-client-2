@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex justify-content-end">
+  <div style="background-color: lightblue;">
     <canvas 
       ref="city-graph-canvas"
       @click="checkForCityHit"
@@ -152,7 +152,7 @@ export default {
     // we can't access the rendering context until the canvas is mounted to the DOM.
     // once we have it, provide it to all child components.
     this.provider.ctx = this.$refs['city-graph-canvas'].getContext('2d');
-    this.provider.ctx.canvas.style.backgroundColor = 'lightblue'
+    // this.provider.ctx.canvas.style.backgroundColor = 'lightblue'
 
     this.$refs['city-graph-canvas'].width = this.width;
     this.$refs['city-graph-canvas'].height = this.height;
