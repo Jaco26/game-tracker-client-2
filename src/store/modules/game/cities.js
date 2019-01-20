@@ -57,6 +57,7 @@ export default {
     simpleCities: state => state.graph.map(c => ({
       name: c.name,
       id: c.id,
+      color: c.color,
     })),
   }
 }
