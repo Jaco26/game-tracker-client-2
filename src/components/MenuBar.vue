@@ -15,9 +15,16 @@
       </b-nav>
     </div>
 
-    <b-btn size="lg" @click="$store.dispatch('game/cities/clearInfections')">
-      Clear Infections
-    </b-btn>
+    <b-dropdown size="lg" boundary="viewport" class="m-2" text="Actions">
+      <b-dropdown-item
+        v-for="item in actionsDropdownItems" 
+        :key="item.text"
+        @click="item.action"
+        
+      >
+        {{item.text}}
+      </b-dropdown-item>
+    </b-dropdown>
     
   </b-navbar>
 </template>
@@ -25,9 +32,23 @@
 <script>
 import { bindState } from '@/store/index';
 export default {
-  computed: { 
-    // ...bindState('')
+  data() {
+    return {
+      actionsDropdownItems: [
+        {
+          text: 'Redeal Infection Deck',
+          action: () => this.$store.dispatch('game/infection-deck/refreshDeck'),
+        },
+        {
+          text: 'Clear Infections',
+          action: () => this.$store.dispatch('game/cities/clearInfections'),
+        },
+      ],
+    }
   },
+  computed: {
+
+  }
 
 }
 </script>

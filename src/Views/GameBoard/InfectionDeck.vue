@@ -16,6 +16,18 @@
       <b-col>
         Intensification Stack
         <b-button @click="intensify">Intensify</b-button>
+        <div
+          v-for="(arr, i) in intensifyStack"
+          :key="i"
+          class="mb-2"
+        >
+          <ul style="list-style: none;">
+            <li 
+              v-for="item in arr"
+              :key="item"
+            >{{item}}</li>
+          </ul>
+        </div>
       </b-col>
     </b-form-row>
   </div>
@@ -51,11 +63,16 @@ export default {
     ...mapGetters('game/cities', [
       'citiesById',
     ]),
+    intensifyStack() {
+      return this.intensifyStackIds.map(arr => (
+        arr.map(id => this.citiesById[id].name)
+      )).reverse();
+    },
     infectionDeckOptions() {
       return [this.alwaysSelectedOption, ...this.possibleNextCardIds.map(id => ({
           value: id,
           text: this.citiesById[id].name,
-        })).sort()
+        }))
       ];
     },
     discardPile() {

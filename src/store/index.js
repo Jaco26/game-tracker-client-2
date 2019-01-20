@@ -56,7 +56,7 @@ export function bindState(namespace, items) {
   }, {});
 }
 
-function setState(state, { key, data }) {  
+function setState(state, { key, data }) {    
   let stateRef = state;
   key.split('.').reduce((a, b, i, arr) => {
     if (i === arr.length - 1) {
@@ -65,7 +65,7 @@ function setState(state, { key, data }) {
       stateRef = stateRef[b];
     }
     return stateRef;
-  }, stateRef);
+  }, stateRef);  
 }
 
 function clearFields(state, keys = []) {
