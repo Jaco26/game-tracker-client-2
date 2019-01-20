@@ -54,11 +54,18 @@ export default {
     }
   },
   getters: {
-    simpleCities: state => state.graph.map(c => ({
-      name: c.name,
-      id: c.id,
-      color: c.color,
+    simpleCities: state => state.graph.map(city => ({
+      name: city.name,
+      id: city.id,
+      color: city.color,
     })),
+    citiesById: state => state.graph.reduce((a, city) => {
+      a[city.id] = {
+        name: city.name,
+        color: city.color,
+      }
+      return a;
+    }, {}),
   }
 }
 
