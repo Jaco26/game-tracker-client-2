@@ -66,7 +66,7 @@ export default {
     intensifyStack() {
       return this.intensifyStackIds.map(arr => (
         arr.map(id => this.citiesById[id].name)
-      )).reverse();
+      ));
     },
     infectionDeckOptions() {
       return [this.alwaysSelectedOption, ...this.possibleNextCardIds.map(id => ({

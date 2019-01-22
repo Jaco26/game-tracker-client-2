@@ -24,16 +24,16 @@ export default {
   state: loadFromStorage(initialState()),
   mutations: {
     pushIntensify(state) {      
-      state.intensifyStackIds.push(state.discardIds);
+      state.intensifyStackIds.unshift(state.discardIds);
       state.discardIds = [];
     },
     spliceFromIntensifyTop(state, id) {
-      const top = state.intensifyStackIds.length - 1
-      const index = state.intensifyStackIds[top].indexOf(id);
-      state.intensifyStackIds[top].splice(index, 1);
+      // const top = state.intensifyStackIds.length - 1
+      const index = state.intensifyStackIds[0].indexOf(id);
+      state.intensifyStackIds[0].splice(index, 1);
     },
     popIntensify(state) {
-      state.intensifyStackIds.pop();
+      state.intensifyStackIds.shift();
     }
   },
   actions: {
@@ -51,11 +51,14 @@ export default {
       commit('saveToStorage', { STORAGE_KEY, keys });
     },
     drawCard({ commit, dispatch, state, rootState }, id) {      
-      // TODO: INFECT CITY 
-      const top = state.intensifyStackIds.length - 1;
-      if (top > -1 && state.intensifyStackIds[top].length) {
+      dispatch(
+        'game/cities/updateCityInfection', 
+        { id,  amount: rootState.game.cities.infectionLevels[id] + 1 },
+        { root: true },
+      );
+      if (state.intensifyStackIds[0]) {
         commit('spliceFromIntensifyTop', id);
-        if (!state.intensifyStackIds[top].length) {
+        if (!state.intensifyStackIds[0].length) {
           commit('popIntensify');
         }
       }
@@ -74,7 +77,7 @@ export default {
     possibleNextCardIds: state => {
       if (state.intensifyStackIds) {
         return state.intensifyStackIds.length
-        ? state.intensifyStackIds[state.intensifyStackIds.length - 1].filter(id => !state.discardIds.includes(id))
+        ? state.intensifyStackIds[0].filter(id => !state.discardIds.includes(id))
         : state.allCardIds.filter(id => !state.discardIds.includes(id));
       }
     },
