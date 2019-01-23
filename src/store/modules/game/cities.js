@@ -1,4 +1,5 @@
 import CITY_GRAPH from '@/store/static-data/city-graph';
+import { Store } from 'vuex';
 
 const STORAGE_KEY = 'cities';
 
@@ -13,6 +14,7 @@ function initialState() {
   return {
     graph: CITY_GRAPH,
     infectionLevels: initEmptyInfectionLevels(),
+    nOutbreaks: 0,
   };
 }
 
@@ -20,6 +22,7 @@ function loadFromStorage(state) {
   const storage = JSON.parse(localStorage.getItem(STORAGE_KEY));
   if (storage) {    
     state.infectionLevels = storage.infectionLevels;
+    state.nOutbreaks = storage.nOutbreaks || 0;
   }
   return state;
 }
@@ -39,7 +42,11 @@ export default {
           key: 'infectionLevels', 
           data: newInfectionLevels 
         });
-        commit('saveToStorage', { STORAGE_KEY, keys: ['infectionLevels'] });
+        commit('setState', {
+          key: 'nOutbreaks',
+          data: state.nOutbreaks + 1,
+        });
+        commit('saveToStorage', { STORAGE_KEY, keys: ['infectionLevels', 'nOutbreaks'] });
       } else if (amount < 4 && amount > -1) {
         commit('setInfectionLevel', { id, amount });
         commit('saveToStorage', { STORAGE_KEY, keys: ['infectionLevels'] });
@@ -50,7 +57,11 @@ export default {
         key: 'infectionLevels',
         data: initEmptyInfectionLevels(),
       });
-      commit('saveToStorage', { STORAGE_KEY, keys: ['infectionLevels'] });
+      commit('setState', {
+        key: 'nOutbreaks',
+        data: 0,
+      });
+      commit('saveToStorage', { STORAGE_KEY, keys: ['infectionLevels', 'nOutbreaks'] });
     }
   },
   getters: {

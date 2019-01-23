@@ -4,6 +4,7 @@
       ref="city-graph-canvas"
       @click="checkForCityHit"
     ></canvas>
+    <!-- <NOutbreaksText :nOutbreaks="nOutbreaks" /> -->
     <CityGraphNode 
       v-for="node in canvasGraphNodes"
       :key="node.id"
@@ -20,15 +21,18 @@
 
 <script>
 import CityGraphNode from './CityGraphNode';
+import NOutbreaksText from './NOutbreaksText';
 import { mapState, mapActions, mapGetters } from 'vuex';
 export default {
   components: {
     CityGraphNode,
+    NOutbreaksText
   },
   computed: {
     ...mapState('game/cities', [
       'graph',
-      'infectionLevels'
+      'infectionLevels',
+      'nOutbreaks',
     ]),
     canvasGraphNodes() {
       const { width, height } = this;
