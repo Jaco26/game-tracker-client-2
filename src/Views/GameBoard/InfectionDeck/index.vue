@@ -1,5 +1,6 @@
 <template>
   <div>
+    <IntensifyModal />
     <b-form-row>
       <b-col>
         Infection Deck
@@ -15,7 +16,11 @@
       </b-col>
       <b-col>
         Intensification Stack
-        <b-button @click="intensify">Intensify</b-button>
+        <b-button @click="intensify">
+        <!-- <b-button 
+          @click="$store.commit('game/infection-deck/setState', { key: 'showIntensifyModal', data: true })"
+        > -->
+          Epidemic</b-button>
         <div
           v-for="(arr, i) in intensifyStack"
           :key="i"
@@ -35,7 +40,11 @@
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
+import IntensifyModal from './IntensifyModal'
 export default {
+  components: {
+    IntensifyModal,
+  },
   mounted() {
     if (!this.allCardIds.length) {
       this.setAllCardIds(Object.keys(this.citiesById));

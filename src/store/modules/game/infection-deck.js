@@ -6,6 +6,7 @@ function initialState() {
     allCardIds: [],
     discardIds: [],
     intensifyStackIds: [],
+    showIntensifyModal: false,
   }
 }
 
@@ -68,8 +69,8 @@ export default {
       });
       commit('saveToStorage', { STORAGE_KEY, keys: ['intensifyStackIds', 'discardIds'] });
     },
-    intensify({ commit, state }) {      
-      commit('pushIntensify')
+    intensify({ commit }) {
+      commit('pushIntensify');
       commit('saveToStorage', { STORAGE_KEY, keys: ['intensifyStackIds', 'discardIds'] });
     },
   },

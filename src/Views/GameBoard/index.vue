@@ -16,7 +16,7 @@
 
 <script>
 import CityGraphCanvas from './CityGraphCanvas'
-import InfectionDeck from './InfectionDeck'
+import InfectionDeck from './InfectionDeck/index'
 export default {
   components: {
     CityGraphCanvas,
