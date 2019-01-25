@@ -65,6 +65,7 @@ export default {
       'allCardIds',
       'discardIds',
       'intensifyStackIds',
+      'isEpidemic',
     ]),
     ...mapGetters('game/infection-deck', [
       'possibleNextCardIds'
@@ -94,15 +95,20 @@ export default {
     ...mapActions('game/infection-deck', [
       'setAllCardIds',
       'drawCard',
-      'intensify'
+      'epidemicInfect',
     ]),
     selectCard(id) {
-      // This is dumb but I have to check if the id has a value
-      // because when I set this.selected back to its default 'always',
-      // the b-form-select emits another "change" event which in turn 
-      // invokes this method and passes in a null value for as the "id"
-      // argument and everything gets fucked up if I try to commit it.
-      if (id) this.drawCard(id); 
+      if (this.isEpidemic) {
+        // why the if (id)...see below...
+        if (id) this.epidemicInfect(id);
+      } else {
+        // This is dumb but I have to check if the id has a value
+        // because when I set this.selected back to its default 'always',
+        // the b-form-select emits another "change" event which in turn 
+        // invokes this method and passes in a null value for as the "id"
+        // argument and everything gets fucked up if I try to commit it.
+        if (id) this.drawCard(id); 
+      }
       this.$nextTick(() => {
         this.selected = 'always'
       });

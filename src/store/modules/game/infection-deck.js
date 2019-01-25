@@ -51,8 +51,22 @@ export default {
       });
       commit('saveToStorage', { STORAGE_KEY, keys });
     },
-    epidemicInfect({ commit, dispatch, state }, id) {
-      
+    epidemicInfect({ commit, dispatch, state, rootState }, id) {
+      // increase infection rate
+      // infect
+      dispatch(
+        'game/cities/updateCityInfection',
+        { id, amount: rootState.game.cities.infectionLevels[id] + 3 },
+        { root: true },
+      );
+      commit('setState', {
+        key: 'discardIds',
+        data: [...state.discardIds, id],
+      });
+      // intensify
+      commit('pushIntensify');
+      commit('setState', { key: 'isEpidemic', data: false });
+      commit('saveToStorage', { STORAGE_KEY, keys: ['intensifyStackIds', 'discardIds'] });
     },
     drawCard({ commit, dispatch, state, rootState }, id) { 
       dispatch(
@@ -92,10 +106,10 @@ export default {
           const cardsNotOnBottom = {...discardIds, ...flattenedIntensify};
           return state.allCardIds.filter(cardId => !cardsNotOnBottom[cardId]);
         } else {
-
+          return state.allCardIds.filter(cardId => !discardIds[cardId]);
         }
       }
-
+      return null;
     },
     possibleNextCardIds: (state, getters) => {
       if (getters.cardsForEpidemicInfecting) {
