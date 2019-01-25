@@ -16,10 +16,10 @@
       </b-col>
       <b-col>
         Intensification Stack
-        <b-button @click="intensify">
-        <!-- <b-button 
-          @click="$store.commit('game/infection-deck/setState', { key: 'showIntensifyModal', data: true })"
-        > -->
+        <!-- <b-button @click="intensify"> -->
+        <b-button 
+          @click="$store.commit('game/infection-deck/setState', { key: 'isEpidemic', data: true })"
+        >
           Epidemic</b-button>
         <div
           v-for="(arr, i) in intensifyStack"

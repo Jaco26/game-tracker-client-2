@@ -6,7 +6,7 @@ function initialState() {
     allCardIds: [],
     discardIds: [],
     intensifyStackIds: [],
-    showIntensifyModal: false,
+    isEpidemic: false,
   }
 }
 
@@ -51,7 +51,10 @@ export default {
       });
       commit('saveToStorage', { STORAGE_KEY, keys });
     },
-    drawCard({ commit, dispatch, state, rootState }, id) {      
+    epidemicInfect({ commit, dispatch, state }, id) {
+      
+    },
+    drawCard({ commit, dispatch, state, rootState }, id) { 
       dispatch(
         'game/cities/updateCityInfection', 
         { id,  amount: rootState.game.cities.infectionLevels[id] + 1 },
@@ -75,7 +78,29 @@ export default {
     },
   },
   getters: {
-    possibleNextCardIds: state => {
+    cardsForEpidemicInfecting: state => {
+      if (state.isEpidemic) {
+        const discardIds = state.discardIds.reduce((accum, cardId) => {
+          accum[cardId] = true;
+          return accum;
+        }, {});
+        if (state.intensifyStackIds.length) {
+          const flattenedIntensify = state.intensifyStackIds.reduce((accum, group) => {
+            group.forEach(cardId => accum[cardId] = true);
+            return accum;
+          }, {});
+          const cardsNotOnBottom = {...discardIds, ...flattenedIntensify};
+          return state.allCardIds.filter(cardId => !cardsNotOnBottom[cardId]);
+        } else {
+
+        }
+      }
+
+    },
+    possibleNextCardIds: (state, getters) => {
+      if (getters.cardsForEpidemicInfecting) {
+        return getters.cardsForEpidemicInfecting;
+      }
       if (state.intensifyStackIds) {
         return state.intensifyStackIds.length
         ? state.intensifyStackIds[0].filter(id => !state.discardIds.includes(id))
