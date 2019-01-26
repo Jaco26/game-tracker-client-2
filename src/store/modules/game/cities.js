@@ -1,5 +1,4 @@
 import CITY_GRAPH from '@/store/static-data/city-graph';
-import { Store } from 'vuex';
 
 const STORAGE_KEY = 'cities';
 
